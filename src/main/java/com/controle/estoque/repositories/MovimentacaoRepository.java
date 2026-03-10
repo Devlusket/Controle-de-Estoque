@@ -16,4 +16,6 @@ public interface MovimentacaoRepository extends JpaRepository<Movimentacao, Long
 
   List<Movimentacao> findByCidadeDestinoId(Long cidadeDestinoId);
 
+  List<Movimentacao> findByCidadeOrigemEstado(String estado);
+
 }

@@ -10,6 +10,6 @@ import com.controle.estoque.entities.Produto;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-  List<Produto> findByAtivoTrue(Boolean ativo);
+  List<Produto> findByAtivoTrue();
 
 }
