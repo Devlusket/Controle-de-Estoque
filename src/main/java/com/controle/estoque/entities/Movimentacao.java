@@ -48,19 +48,19 @@ public class Movimentacao {
 
     @ManyToOne
     @JoinColumn(name = "produto_id")
-    private Produto produtoId;
+    private Produto produto;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
-    private Usuario usuarioId;  
+    private Usuario usuario;  
     
     @ManyToOne
     @JoinColumn(name = "cidade_origem_id")
-    private Cidade cidadeOrigemId;
+    private Cidade cidadeOrigem;
 
     @ManyToOne
     @JoinColumn(name = "cidade_destino_id")
-    private Cidade cidadeDestinoId;
+    private Cidade cidadeDestino;
 
 
     @PrePersist

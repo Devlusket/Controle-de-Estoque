@@ -54,7 +54,11 @@ public class Usuario implements UserDetails {
 
   @ManyToOne
   @JoinColumn(name = "cidade_id")
-  private Cidade cidadeId;
+  private Cidade cidade;
+
+  public String getEmail() {
+    return email;
+  }
 
 
   @Override  
