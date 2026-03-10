@@ -54,7 +54,7 @@ public class Usuario implements UserDetails {
 
   @ManyToOne
   @JoinColumn(name = "cidade_id")
-  private Cidade cidade;
+  private Cidade cidadeId;
 
 
   @Override  
