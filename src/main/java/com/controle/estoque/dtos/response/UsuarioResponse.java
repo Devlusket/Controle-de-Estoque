@@ -1,6 +1,6 @@
 package com.controle.estoque.dtos.response;
 
-import javax.management.relation.Role;
+import com.controle.estoque.enums.Role;
 
 public record UsuarioResponse(
     Long id,
