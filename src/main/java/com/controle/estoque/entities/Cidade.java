@@ -1,5 +1,8 @@
 package com.controle.estoque.entities;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +21,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "cidades")
-public class Cidade {
+public class Cidade implements Serializable {
+    
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
