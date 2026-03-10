@@ -1,0 +1,1 @@
+ALTER TABLE cidades ALTER COLUMN estado TYPE VARCHAR(2);
