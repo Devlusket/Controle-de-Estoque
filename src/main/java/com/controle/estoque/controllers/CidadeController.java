@@ -33,10 +33,12 @@ public class CidadeController {
     return ResponseEntity.ok(cidadeService.listarCidades());
   }
 
+
   @GetMapping("/{id}")
   public ResponseEntity<CidadeResponse> buscarCidadePorId(@PathVariable Long id) {
     return ResponseEntity.ok(cidadeService.buscarCidadePorId(id));
   }
+
 
   @PreAuthorize("hasRole('ADMIN')")
   @PostMapping
@@ -44,11 +46,13 @@ public class CidadeController {
     return ResponseEntity.status(HttpStatus.CREATED).body(cidadeService.criarCidade(request));
   }
 
+
   @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<CidadeResponse> atualizarCidade(@PathVariable Long id, @RequestBody CidadeRequest request) {
     return ResponseEntity.ok(cidadeService.atualizarCidade(id, request));
   }
+
 
   @PreAuthorize("hasRole('ADMIN')")
   @DeleteMapping("/{id}")
@@ -58,7 +62,4 @@ public class CidadeController {
   }
 
 
-
-
-  
 }
