@@ -1,12 +1,12 @@
-# 📦 Estoque B2B — API de Controle de Estoque Regional
+#  Estoque B2B — API de Controle de Estoque Regional
 
 API REST desenvolvida com Spring Boot para controle de estoque de uma empresa regional com múltiplas filiais. O sistema permite que cada cidade gerencie suas próprias movimentações de estoque, enquanto a sede (admin) tem visibilidade completa de tudo.
 
-🔗 **API em produção:** https://controle-de-estoque-production-4472.up.railway.app/swagger-ui/index.html
+ **API em produção:** https://controle-de-estoque-production-4472.up.railway.app/swagger-ui/index.html
 
 ---
 
-## 🚀 Tecnologias
+##  Tecnologias
 
 - **Java 21**
 - **Spring Boot 3.2.5**
@@ -21,7 +21,7 @@ API REST desenvolvida com Spring Boot para controle de estoque de uma empresa re
 
 ---
 
-## 🏗️ Arquitetura
+##  Arquitetura
 
 O projeto segue arquitetura em camadas:
 
@@ -59,7 +59,7 @@ src/main/java/com/controle/estoque/
 
 ---
 
-## 🗄️ Banco de Dados
+##  Banco de Dados
 
 ### Tabelas
 
@@ -84,7 +84,7 @@ V5__alter_usuarios_senha.sql    — atualização dos hashes BCrypt
 
 ---
 
-## 🔐 Autenticação e Autorização
+##  Autenticação e Autorização
 
 O sistema usa JWT stateless. O token é gerado no login e deve ser enviado em toda requisição no header:
 
@@ -106,7 +106,7 @@ Authorization: Bearer <token>
 
 ---
 
-## 📋 Regras de Negócio
+##  Regras de Negócio
 
 ### Movimentações
 
@@ -126,7 +126,7 @@ Authorization: Bearer <token>
 
 ---
 
-## ⚙️ Como executar localmente
+##  Como executar localmente
 
 ### Pré-requisitos
 
@@ -192,7 +192,7 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
-## 🧪 Testando
+##  Testando
 
 ### Usuários mock disponíveis
 
@@ -213,7 +213,7 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
-## 🌐 Deploy
+##  Deploy
 
 A aplicação está hospedada no **Railway** com PostgreSQL gerenciado.
 
@@ -228,7 +228,7 @@ JWT_SECRET=chave-secreta-longa-e-segura
 
 ---
 
-## 📌 Decisões técnicas
+##  Decisões técnicas
 
 - **MapStruct** ao invés de mappers manuais — elimina boilerplate e é o padrão de mercado
 - **Flyway** para migrations — garante rastreabilidade e reprodutibilidade do banco
@@ -240,7 +240,7 @@ JWT_SECRET=chave-secreta-longa-e-segura
 
 ---
 
-## 📄 Endpoints
+##  Endpoints
 
 ### Autenticação
 | Método | Rota | Descrição | Auth |
