@@ -25,7 +25,8 @@ public class ProdutoService {
 
 
   public List<ProdutoResponse> listarProdutos() {
-    return produtoRepository.findAll().stream()
+    return produtoRepository.findByAtivoTrue()
+      .stream()
       .map(produtoMapper::toProdutoResponse)
       .toList();
   }
