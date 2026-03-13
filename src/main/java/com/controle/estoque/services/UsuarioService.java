@@ -9,6 +9,8 @@ import com.controle.estoque.dtos.request.UsuarioRequest;
 import com.controle.estoque.dtos.response.UsuarioResponse;
 import com.controle.estoque.entities.Cidade;
 import com.controle.estoque.entities.Usuario;
+import com.controle.estoque.exceptions.ErrorMessages;
+import com.controle.estoque.exceptions.ResourceNotFoundException;
 import com.controle.estoque.mappers.UsuarioMapper;
 import com.controle.estoque.repositories.CidadeRepository;
 import com.controle.estoque.repositories.UsuarioRepository;
@@ -38,12 +40,12 @@ public class UsuarioService {
   public UsuarioResponse buscarUsuarioPorId(Long id) {
     return usuarioRepository.findById(id)
         .map(usuarioMapper::toResponse)
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USUARIO_NAO_ENCONTRADO));
   }
 
   public void desativarUsuario(Long id) {
     Usuario usuario = usuarioRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USUARIO_NAO_ENCONTRADO));
 
     usuario.setAtivo(false);
     usuarioRepository.save(usuario);
@@ -52,10 +54,9 @@ public class UsuarioService {
   public UsuarioResponse atualizarUsuario(Long id, UsuarioRequest request) {
 
     Usuario usuario = usuarioRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USUARIO_NAO_ENCONTRADO));
     Cidade cidade = cidadeRepository.findById(request.cidadeId())
-        .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
 
         usuario.setEmail(request.email());
         usuario.setNome(request.nome());
@@ -69,7 +70,7 @@ public class UsuarioService {
   public UsuarioResponse criarUsuario(UsuarioRequest request) {
 
     Cidade cidade = cidadeRepository.findById(request.cidadeId())
-        .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
 
     Usuario usuario = usuarioMapper.toEntity(request);
 

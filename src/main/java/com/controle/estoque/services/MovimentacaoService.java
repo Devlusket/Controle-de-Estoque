@@ -12,6 +12,8 @@ import com.controle.estoque.entities.Movimentacao;
 import com.controle.estoque.entities.Produto;
 import com.controle.estoque.entities.Usuario;
 import com.controle.estoque.enums.Role;
+import com.controle.estoque.exceptions.ErrorMessages;
+import com.controle.estoque.exceptions.ResourceNotFoundException;
 import com.controle.estoque.mappers.MovimentacaoMapper;
 import com.controle.estoque.repositories.CidadeRepository;
 import com.controle.estoque.repositories.MovimentacaoRepository;
@@ -38,7 +40,7 @@ public class MovimentacaoService {
         .getName();
 
     return usuarioRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USUARIO_NAO_ENCONTRADO));
   }
 
   public List<MovimentacaoResponse> listarMovimentacoes() {
@@ -103,7 +105,7 @@ public class MovimentacaoService {
   public MovimentacaoResponse obterMovimentacaoPorId(Long id) {
     return movimentacaoRepository.findById(id)
         .map(movimentacaoMapper::toResponse)
-        .orElseThrow(() -> new RuntimeException("Movimentação não encontrada"));
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.MOVIMENTACAO_NAO_ENCONTRADA));
   }
 
 
@@ -114,7 +116,7 @@ public class MovimentacaoService {
     Usuario usuario = getUsuarioAutenticado();
 
     Produto produto = produtoRepository.findById(request.produtoId())
-        .orElseThrow(() -> new RuntimeException("Produto não encontrado")); 
+        .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.PRODUTO_NAO_ENCONTRADO)); 
     
 
     Movimentacao movimentacao = new Movimentacao();
@@ -138,11 +140,11 @@ public class MovimentacaoService {
         movimentacao.setCidadeOrigem(usuario.getCidade());
         if (usuario.getRole() == Role.ADMIN) {
           Cidade cidadeDestino = cidadeRepository.findById(request.cidadeDestinoId())
-              .orElseThrow(() -> new RuntimeException("Cidade destino não encontrada"));
+              .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
           movimentacao.setCidadeDestino(cidadeDestino);
         } else {
         Cidade sede = cidadeRepository.findBySede(true)
-            .orElseThrow(() -> new RuntimeException("Cidade sede não encontrada"));
+            .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
         movimentacao.setCidadeDestino(sede);
         }
 

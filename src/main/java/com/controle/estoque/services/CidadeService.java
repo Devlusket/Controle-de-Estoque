@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.controle.estoque.dtos.request.CidadeRequest;
 import com.controle.estoque.dtos.response.CidadeResponse;
 import com.controle.estoque.entities.Cidade;
+import com.controle.estoque.exceptions.ErrorMessages;
+import com.controle.estoque.exceptions.ResourceNotFoundException;
 import com.controle.estoque.mappers.CidadeMapper;
 import com.controle.estoque.repositories.CidadeRepository;
 
@@ -31,7 +33,7 @@ public class CidadeService {
   public CidadeResponse buscarCidadePorId(Long id) {
     return cidadeRepository.findById(id)
       .map(cidadeMapper::toCidadeResponse)
-      .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+      .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
   }
 
   public CidadeResponse criarCidade(CidadeRequest request){
@@ -45,7 +47,7 @@ public class CidadeService {
   public CidadeResponse atualizarCidade(Long id, CidadeRequest request) {
 
     Cidade cidade = cidadeRepository.findById(id)
-      .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+      .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
 
       cidade.setNome(request.nome());
       cidade.setEstado(request.estado());
@@ -57,7 +59,7 @@ public class CidadeService {
 
   public void deletarCidade(Long id) {
     Cidade cidade = cidadeRepository.findById(id)
-      .orElseThrow(() -> new RuntimeException("Cidade não encontrada"));
+      .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.CIDADE_NAO_ENCONTRADA));
 
     cidadeRepository.delete(cidade);
   }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.controle.estoque.dtos.request.LoginRequest;
 import com.controle.estoque.dtos.response.LoginResponse;
 import com.controle.estoque.entities.Usuario;
+import com.controle.estoque.exceptions.ErrorMessages;
+import com.controle.estoque.exceptions.ResourceNotFoundException;
 import com.controle.estoque.repositories.UsuarioRepository;
 import com.controle.estoque.security.JwtUtil;
 
@@ -26,7 +28,7 @@ public class AuthService {
     );
 
     Usuario usuario = usuarioRepository.findByEmail(request.email())
-      .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+      .orElseThrow(() -> new ResourceNotFoundException(ErrorMessages.USUARIO_NAO_ENCONTRADO));
 
 
     String token = jwtUtil.generateToken(usuario);
