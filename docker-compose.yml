@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: estoque_db
+    environment:
+      POSTGRES_DB: estoque_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: estoque_app
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/estoque_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: uma-chave-super-segura-de-256-bits-ou-maior
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
