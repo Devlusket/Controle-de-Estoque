@@ -1,4 +1,4 @@
-#  Estoque B2B — API de Controle de Estoque Regional
+# 📦 Estoque B2B — API de Controle de Estoque Regional
 
 API REST desenvolvida com Spring Boot para controle de estoque de uma empresa regional com múltiplas filiais. O sistema permite que cada cidade gerencie suas próprias movimentações de estoque, enquanto a sede (admin) tem visibilidade completa de tudo.
 
@@ -17,6 +17,7 @@ API REST desenvolvida com Spring Boot para controle de estoque de uma empresa re
 - **MapStruct 1.5.5** — mapeamento Entity ↔ DTO
 - **Lombok**
 - **SpringDoc OpenAPI (Swagger)**
+- **Docker + Docker Compose** — ambiente de desenvolvimento containerizado
 - **Railway** — deploy em produção
 
 ---
@@ -132,63 +133,49 @@ Authorization: Bearer <token>
 
 - Java 21
 - Maven
-- PostgreSQL instalado localmente
+- Docker e Docker Compose
 
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/estoque.git
-cd estoque
+git clone https://github.com/Devlusket/Controle-de-Estoque.git
+cd Controle-de-Estoque
 ```
 
-### 2. Crie o banco de dados
+### 2. Suba o ambiente com Docker Compose
 
 ```bash
-psql -h localhost -U postgres
+docker compose up
 ```
 
-```sql
-CREATE DATABASE estoque_db;
-\q
-```
+Isso sobe o PostgreSQL e o Spring Boot automaticamente. O Flyway cria as tabelas e insere os dados mock na primeira execução.
 
-### 3. Configure o `application.properties`
-
-Renomeie o arquivo de exemplo e preencha com suas credenciais locais:
-
-```bash
-cp src/main/resources/application.properties.example src/main/resources/application.properties
-```
-
-```properties
-spring.application.name=estoque
-spring.datasource.url=${DB_URL:jdbc:postgresql://localhost:5432/estoque_db}
-spring.datasource.username=${DB_USERNAME:postgres}
-spring.datasource.password=${DB_PASSWORD:sua_senha}
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=false
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.flyway.enabled=true
-spring.flyway.locations=classpath:db/migration
-spring.jackson.time-zone=America/Sao_Paulo
-app.jwt.secret=${JWT_SECRET:chave-secreta-local-minimo-256-bits}
-app.jwt.expiration-ms=86400000
-server.forward-headers-strategy=framework
-```
-
-### 4. Execute a aplicação
-
-```bash
-./mvnw spring-boot:run
-```
-
-O Flyway vai criar as tabelas e inserir os dados mock automaticamente.
-
-### 5. Acesse o Swagger
+### 3. Acesse o Swagger
 
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
+
+### Comandos úteis
+
+```bash
+docker compose up -d     # sobe em background
+docker compose down      # para os containers (dados preservados)
+docker compose logs -f   # acompanha os logs em tempo real
+```
+
+>  Nunca use `docker compose down -v` — esse comando apaga os volumes e todos os dados do banco.
+
+---
+
+##  Docker
+
+O projeto usa **multi-stage build** para otimizar a imagem de produção:
+
+- **Stage 1** — compila o projeto com JDK 21
+- **Stage 2** — roda a aplicação com JRE 21 (imagem ~3x menor)
+
+O Railway detecta o `Dockerfile` automaticamente e usa ele no deploy em produção.
 
 ---
 
@@ -213,9 +200,9 @@ http://localhost:8080/swagger-ui/index.html
 
 ---
 
-##  Deploy
+## Deploy
 
-A aplicação está hospedada no **Railway** com PostgreSQL gerenciado.
+A aplicação está hospedada no **Railway** com PostgreSQL gerenciado. O deploy é automático via GitHub — qualquer push na branch `main` dispara um novo deploy.
 
 ### Variáveis de ambiente necessárias em produção
 
@@ -237,6 +224,7 @@ JWT_SECRET=chave-secreta-longa-e-segura
 - **PUT ao invés de PATCH** — escolha de simplicidade para o escopo atual. Em produção real, PATCH seria mais adequado para atualizações parciais
 - **Produtos soft delete** — desativação ao invés de deleção para preservar histórico de movimentações
 - **`ddl-auto: validate`** — o Hibernate apenas valida o schema, nunca o altera. Toda mudança passa pelo Flyway
+- **Docker multi-stage build** — imagem de produção enxuta com apenas JRE + jar, sem ferramentas de compilação
 
 ---
 

@@ -5,6 +5,10 @@ target/
 !**/src/test/**/target/
 .env
 .env.*
+docker-compose*.yml
+.git/
+.gitignore
+.dockerignore
 
 ### STS ###
 .apt_generated
