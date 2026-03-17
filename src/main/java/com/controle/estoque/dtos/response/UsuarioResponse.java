@@ -7,5 +7,6 @@ public record UsuarioResponse(
     String nome,
     String email,
     Role role,
+    Boolean ativo,
     CidadeResponse cidade
 ) {}
