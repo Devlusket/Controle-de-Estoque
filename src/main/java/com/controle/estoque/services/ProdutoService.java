@@ -41,6 +41,7 @@ public class ProdutoService {
   public ProdutoResponse criarProduto(ProdutoRequest request) {
 
     Produto produto = produtoMapper.toEntity(request);
+    produto.setAtivo(true);
     Produto produtoSalvo = produtoRepository.save(produto);
     return produtoMapper.toProdutoResponse(produtoSalvo);
 
