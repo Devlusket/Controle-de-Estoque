@@ -1,0 +1,1 @@
+UPDATE usuarios SET ativo = true WHERE ativo IS NULL OR ativo = false;
