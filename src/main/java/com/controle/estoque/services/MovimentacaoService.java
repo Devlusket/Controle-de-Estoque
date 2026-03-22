@@ -48,12 +48,12 @@ public class MovimentacaoService {
     Usuario usuario = getUsuarioAutenticado();
 
     if (usuario.getRole() == Role.ADMIN) {
-      return movimentacaoRepository.findAll().stream()
+      return movimentacaoRepository.findAllByOrderByDataMovimentacaoDesc().stream()
           .map(movimentacaoMapper::toResponse)
           .toList();
     } else {
 
-      return movimentacaoRepository.findByCidadeOrigemId(usuario.getCidade().getId())
+      return movimentacaoRepository.findByCidadeOrigemIdOrderByDataMovimentacaoDesc(usuario.getCidade().getId())
           .stream()
           .map(movimentacaoMapper::toResponse)
           .toList();
