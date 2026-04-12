@@ -1,8 +1,10 @@
-# 📦 Estoque B2B — API de Controle de Estoque Regional
+#  Estoque B2B — API de Controle de Estoque Regional
 
 API REST desenvolvida com Spring Boot para controle de estoque de uma empresa regional com múltiplas filiais. O sistema permite que cada cidade gerencie suas próprias movimentações de estoque, enquanto a sede (admin) tem visibilidade completa de tudo.
 
- **API em produção:** https://controle-de-estoque-production-4472.up.railway.app/swagger-ui/index.html
+ **API em produção (Swagger):** https://controle-de-estoque-backend-7h07.onrender.com/swagger-ui/index.html
+
+ **Frontend em produção:** https://controle-de-estoque-ashen.vercel.app/
 
 ---
 
@@ -18,7 +20,8 @@ API REST desenvolvida com Spring Boot para controle de estoque de uma empresa re
 - **Lombok**
 - **SpringDoc OpenAPI (Swagger)**
 - **Docker + Docker Compose** — ambiente de desenvolvimento containerizado
-- **Railway** — deploy em produção
+- **Render** — deploy do backend em produção
+- **Neon** — PostgreSQL gerenciado em produção
 
 ---
 
@@ -81,6 +84,7 @@ V2__insert_dados.sql            — sede, cidades e usuários mock
 V3__alter_estado_varchar.sql    — ajuste de tipo da coluna estado
 V4__add_ativo_usuarios.sql      — adição da coluna ativo em usuarios
 V5__alter_usuarios_senha.sql    — atualização dos hashes BCrypt
+V6__fix_ativo_usuarios.sql      — correção do campo ativo nos dados mock
 ```
 
 ---
@@ -175,7 +179,7 @@ O projeto usa **multi-stage build** para otimizar a imagem de produção:
 - **Stage 1** — compila o projeto com JDK 21
 - **Stage 2** — roda a aplicação com JRE 21 (imagem ~3x menor)
 
-O Railway detecta o `Dockerfile` automaticamente e usa ele no deploy em produção.
+O Render detecta o `Dockerfile` automaticamente e usa ele no deploy em produção.
 
 ---
 
@@ -198,19 +202,29 @@ O Railway detecta o `Dockerfile` automaticamente e usa ele no deploy em produç�
 3. Clique em **Authorize** (cadeado) e cole o token
 4. Teste os endpoints
 
+>  O backend está hospedado no Render no plano gratuito — a primeira requisição pode demorar ~1 minuto para o serviço acordar após inatividade.
+
 ---
 
-## Deploy
+##  Deploy
 
-A aplicação está hospedada no **Railway** com PostgreSQL gerenciado. O deploy é automático via GitHub — qualquer push na branch `main` dispara um novo deploy.
+O backend está hospedado no **Render** com banco de dados **PostgreSQL gerenciado pelo Neon**. O deploy é automático via GitHub — qualquer push na branch `main` dispara um novo deploy.
 
-### Variáveis de ambiente necessárias em produção
+### Infraestrutura de produção
+
+| Serviço | Plataforma | Observação |
+|---|---|---|
+| Backend (Spring Boot) | Render | Plano gratuito, dorme após 15min de inatividade |
+| Banco de dados (PostgreSQL) | Neon | Plano gratuito, sempre disponível |
+| Frontend (Angular) | Vercel | Plano gratuito, sempre disponível |
+
+### Variáveis de ambiente necessárias no Render
 
 ```
-DB_URL=jdbc:postgresql://host:porta/banco
+DB_URL=jdbc:postgresql://host:porta/banco?sslmode=require
 DB_USERNAME=usuario
 DB_PASSWORD=senha
-JWT_SECRET=chave-secreta-longa-e-segura
+JWT_SECRET=chave-secreta-com-minimo-32-caracteres
 ```
 
 ---
@@ -222,9 +236,10 @@ JWT_SECRET=chave-secreta-longa-e-segura
 - **JWT stateless** — sem sessão no servidor, escalável horizontalmente
 - **Records Java** para DTOs — mais enxuto que classes com Lombok para objetos imutáveis
 - **PUT ao invés de PATCH** — escolha de simplicidade para o escopo atual. Em produção real, PATCH seria mais adequado para atualizações parciais
-- **Produtos soft delete** — desativação ao invés de deleção para preservar histórico de movimentações
+- **Soft delete em produtos e usuários** — desativação ao invés de deleção para preservar histórico de movimentações
 - **`ddl-auto: validate`** — o Hibernate apenas valida o schema, nunca o altera. Toda mudança passa pelo Flyway
 - **Docker multi-stage build** — imagem de produção enxuta com apenas JRE + jar, sem ferramentas de compilação
+- **CORS com allowedOrigins("*")** — aceita requisições de qualquer origem, permitindo o frontend na Vercel consumir a API sem configuração adicional
 
 ---
 
